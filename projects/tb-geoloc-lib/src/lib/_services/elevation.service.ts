@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 export class ElevationService {
   mapQuestApiKey: string = null;
   openElevationApiUrl: string = null;
+  openTopoDataApiUrl: string = null;
   elevationApiIoApiUrl: string = null;
   mapQuestElevationApiUrl: string = null;
 
@@ -20,6 +21,7 @@ export class ElevationService {
 
   getElevation(lat: number, lng: number, provider: string): Observable<number> {
     if (provider.toLowerCase() === 'openelevation') { return this.getOpenElevation(lat, lng); }
+    if (provider.toLowerCase() === 'opentopodata') { return this.getOpenTopoData(lat, lng); }
     if (provider.toLowerCase() === 'elevationapiio') { return this.getElevationApiIo(lat, lng); }
     if (provider.toLowerCase() === 'mapquest' && this.mapQuestApiKey !== null) { return this.getMapQuestElevation(lat, lng); }
     return of(-1);
@@ -29,6 +31,13 @@ export class ElevationService {
     const apiUrl = `${this.openElevationApiUrl}/lookup?locations=${lat},${lng}`;
     return this.http.get(apiUrl).pipe(
       map((obj: OpenElevationApiObject) => obj.results[0].elevation)
+    );
+  }
+
+  getOpenTopoData(lat: number, lng: number): Observable<number> {
+    const apiUrl = `${this.openTopoDataApiUrl}/eudem25m?locations=${lat},${lng}`;
+    return this.http.get(apiUrl).pipe(
+      map((obj: OpenTopoDataApiObject) => obj.results[0][1].elevation)
     );
   }
 
@@ -50,6 +59,10 @@ export class ElevationService {
     this.openElevationApiUrl = url;
   }
 
+  setOpenTopoDataApiUrl(url: string): void {
+    this.openTopoDataApiUrl = url;
+  }
+
   setElevationApiIoApiUrl(url: string): void {
     this.elevationApiIoApiUrl = url;
   }
@@ -65,6 +78,19 @@ interface OpenElevationApiObject {
     elevation: number,
     latitude: number,
     longitude: number
+  }>;
+}
+
+interface OpenTopoDataApiObject {
+  results: Array<{
+    0: Array<{
+      dataset: string,
+      elevation: number,
+      location: Array<{
+        latitude: number,
+        longitude: number
+      }>;
+    }>;
   }>;
 }
 

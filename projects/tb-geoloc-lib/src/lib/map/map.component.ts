@@ -51,13 +51,14 @@ export class MapComponent implements OnInit, OnDestroy {
     if (value === true) { this.resetComponent(); }
   }
 
-  @Input() elevationProvider: 'openElevation' | 'elevationApiIo' | 'mapQuest' = 'openElevation';
+  @Input() elevationProvider: 'openElevation' | 'openTopoData' | 'elevationApiIo' | 'mapQuest' = 'openTopoData';
   @Input() geolocationProvider: 'osm' | 'mapQuest' = 'osm';
   @Input() mapQuestApiKey: string;
 
   @Input() osmNominatimApiUrl = 'https://nominatim.openstreetmap.org';
   @Input() mapQuestNominatimApiUrl = 'https://open.mapquestapi.com/nominatim/v1';
   @Input() openElevationApiUrl = 'https://api.open-elevation.com/api/v1';
+  @Input() openTopoDataApiUrl = 'https://api.opentopodata.org/v1';
   @Input() elevationApiIoApiUrl = 'https://elevation-api.io/api/elevation';
   @Input() mapQuestElevationApiUrl = 'https://open.mapquestapi.com/elevation/v1';
   @Input() frGeoApiUrl = 'https://geo.api.gouv.fr';
@@ -363,6 +364,7 @@ export class MapComponent implements OnInit, OnDestroy {
     this.geocodeService.setOsmNominatimApiUrl(this.osmNominatimApiUrl);
     this.geocodeService.setMapQuestNominatimApiUrl(this.mapQuestNominatimApiUrl);
     this.elevationService.setOpenElevationApiUrl(this.openElevationApiUrl);
+    this.elevationService.setOpenTopoDataApiUrl(this.openTopoDataApiUrl);
     this.elevationService.setElevationApiIoApiUrl(this.elevationApiIoApiUrl);
     this.elevationService.setMapQuestElevationApiUrl(this.mapQuestElevationApiUrl);
     this.geocodeService.setFrGeoApiUrl(this.frGeoApiUrl);
